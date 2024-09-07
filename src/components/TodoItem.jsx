@@ -6,6 +6,7 @@ export default function TodoItem({
   isImportance,
   isCompleted,
   handleOnChangeCheckBox,
+  handleTodoItemClick
 }) {
   // const isChecked = useRef(isCompleted);
   const handleClick = () => {
@@ -19,11 +20,12 @@ export default function TodoItem({
   // }, [isCompleted])
   
   return (
-    <div className="todo-item" onClick={handleClick}>
+    <div className="todo-item" onClick={()=>handleTodoItemClick(id)}>
       <div style={{display:"flex",gap:"4px"}}>
         <input
           // ref={isChecked}
           type="checkbox"
+          onClick={(e)=>e.stopPropagation()}
           checked={isCompleted}
           onChange={(e) => handleOnChangeCheckBox(id, e.target.checked)}
         />

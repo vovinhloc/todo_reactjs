@@ -1,7 +1,10 @@
 import TodoItem from "./components/TodoItem";
 import "./App.css";
 import { useState, useRef } from "react";
+import Sidebar from "./components/Sidebar";
 function App() {
+  const [activeTodoItemId, setActiveTodoItemId] = useState()
+  const [showSidebar, setShowSidebar] = useState(false)
   const inputTodo = useRef("");
   const [todoList, setTodoList] = useState([
     { id: 1, name: "Học toán", isImportance: false, isCompleted: false },
@@ -9,6 +12,9 @@ function App() {
     { id: 3, name: "chơi game", isImportance: false, isCompleted: true },
     { id: 4, name: "chơi đàn", isImportance: false, isCompleted: false },
   ]);
+  const activedTodoItem=todoList.find((todo)=>todo.id===activeTodoItemId)
+  console.log({activeTodoItemId})
+  console.log({activedTodoItem})
   const handleIsCompleted = (id, value) => {
     // const i = todoList.findIndex((todo) => todo.id === id);
     
@@ -48,8 +54,18 @@ function App() {
     }
     return newState;
   })
-  
+
   };
+  const handleTodoItemClick=(id)=>{
+    setShowSidebar(true);
+    setActiveTodoItemId(id)
+  }
+  const handleUpdateTotoItem=(newTodoUpdate)=>{
+    console.log({newTodoUpdate});
+    setTodoList((preTodoList)=>preTodoList.map((todo)=>{
+     return todo.id===newTodoUpdate.id?newTodoUpdate:todo
+    }))
+  }
   const todos = todoList.map((todo, index) => {
     return (
       <TodoItem
@@ -59,10 +75,12 @@ function App() {
         isImportance={todo.isImportance}
         isCompleted={todo.isCompleted}
         handleOnChangeCheckBox={handleIsCompleted}
+        handleTodoItemClick={handleTodoItemClick}
       />
     );
   });
 
+  
   
   const handleAddNewTask = (e) => {
     if (e.key === "Enter") {
@@ -88,6 +106,9 @@ function App() {
           onKeyDown={handleAddNewTask}
         />
         <div>{todos}</div>
+        
+         {showSidebar && <Sidebar key={activeTodoItemId} todoItem={activedTodoItem} handleUpdateTodo={handleUpdateTotoItem} setShowSidebar={setShowSidebar}/>}
+        
       </div>
     </>
   );
