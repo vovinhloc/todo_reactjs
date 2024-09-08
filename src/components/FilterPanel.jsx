@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import PropTypes from "prop-types";
 import "./Filterpanel.css";
+import CategoryList from "./CategoryList";
 const FILTER_ITEMS = [
   { id: "all", label: "All", iconPath: "./public/inbox.png" },
   { id: "importance", label: "Importance", iconPath: "./public/flag.png" },
@@ -80,6 +81,7 @@ const FilterPanel = ({
           <p>22</p>
         </div> */}
       </div>
+      <CategoryList todoList={todoList}/>
     </div>
   );
 };

@@ -1,14 +1,15 @@
 import  { useState } from "react";
 import PropTypes from "prop-types";
-
+import { CATEGORY_ITEMS } from "../contants";
 import "./Sidebar.css";
 const Sidebar = ({ todoItem, handleUpdateTodo, setShowSidebar }) => {
   const [name, setName] = useState(todoItem.name);
   const [isCompleted, setIsCompleted] = useState(todoItem.isCompleted);
   const [isImportance, setIsImportance] = useState(todoItem.isImportance);
+  const [category,setCategory]=useState(todoItem.category)
   const handleSave = () => {
     console.log("handleSave");
-    const newTodo = { ...todoItem, name, isCompleted, isImportance };
+    const newTodo = { ...todoItem, name, isCompleted, isImportance ,category};
     handleUpdateTodo(newTodo);
     setShowSidebar(false);
   };
@@ -47,6 +48,20 @@ const Sidebar = ({ todoItem, handleUpdateTodo, setShowSidebar }) => {
             checked={isCompleted}
             onChange={(e) => setIsCompleted(e.target.checked)}
           />
+        </div>
+        <div className="sb-form-field">
+          <label htmlFor="sb-category">Category - {category}</label>
+          <select
+            
+            id="sb-category"
+            name="sb-category"
+            value={category}
+            onChange={(e)=>setCategory(e.target.value)}
+          >
+            {CATEGORY_ITEMS.map((item)=>{
+              return (<option key={item.id} value={item.id}>{item.name}</option>)
+            })}
+          </select>
         </div>
       </form>
       <div className="sb-footer">

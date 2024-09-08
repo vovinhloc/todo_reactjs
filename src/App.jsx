@@ -1,19 +1,21 @@
 import TodoItem from "./components/TodoItem";
 import "./App.css";
-import { useState, useRef,useMemo } from "react";
+import { useState, useRef,useMemo, useContext } from "react";
 import Sidebar from "./components/Sidebar";
 import FilterPanel from "./components/FilterPanel";
+import { AppContext } from "./contexts/AppProvider";
 function App() {
+  const {categorySelectedId} = useContext(AppContext)
   const [searchText,setSearchText]=useState("");
   const [selectedFilterId, setSelectedFilterId] = useState("all");
   const [activeTodoItemId, setActiveTodoItemId] = useState()
   const [showSidebar, setShowSidebar] = useState(false)
   const inputTodo = useRef("");
   const [todoList, setTodoList] = useState([
-    { id: "1", name: "Học toán", isImportance: false, isCompleted: false ,isDeleted:true},
-    { id: "2", name: "học vẽ", isImportance: true, isCompleted: false ,isDeleted:true},
-    { id: "3", name: "chơi game", isImportance: false, isCompleted: true,isDeleted:false },
-    { id: "4", name: "chơi đàn", isImportance: false, isCompleted: false ,isDeleted:true},
+    { id: "1", name: "Học toán", isImportance: false, isCompleted: false ,isDeleted:true,category:"personal"},
+    { id: "2", name: "học vẽ", isImportance: true, isCompleted: false ,isDeleted:true,category:"company"},
+    { id: "3", name: "chơi game", isImportance: false, isCompleted: true,isDeleted:false ,category:"idea"},
+    { id: "4", name: "chơi đàn", isImportance: false, isCompleted: false ,isDeleted:true,category:"travel"},
   ]);
   const activedTodoItem=todoList.find((todo)=>todo.id===activeTodoItemId)
   console.log({activeTodoItemId})
@@ -71,6 +73,7 @@ function App() {
   }
   const filteredTodos =useMemo(()=>todoList.filter(todo=>{
     if (!todo.name.includes(searchText)) return false;
+    if (categorySelectedId && categorySelectedId!==todo.category) return false;
     switch (selectedFilterId) {
       case "importance":
           return todo.isImportance;
@@ -81,7 +84,7 @@ function App() {
       default:
         return true;
     }
-  }),[selectedFilterId,todoList,searchText]) 
+  }),[selectedFilterId,todoList,searchText,categorySelectedId]) 
   
 
   
@@ -90,7 +93,9 @@ function App() {
     if (e.key === "Enter") {
       const value = e.target.value;
       // todoList.push({id:crypto.randomUUID(),name:value})
-      const newTodo = { id: crypto.randomUUID(), name: value , isCompleted:false,isImportance:false,isDeleted:false};
+      const newTodo = { id: crypto.randomUUID()
+        , name: value , isCompleted:false,isImportance:false,isDeleted:false,
+      category:"idea"};
       setTodoList([...todoList, newTodo]);
       // console.log("enter ok:",todoList,inputTodo)
       console.log("inputTodo=", inputTodo.current.value);

@@ -1,0 +1,8 @@
+.categoryItem{
+    display: flex;
+    justify-content: space-between;
+}
+.categoryItem.active{
+    background-color: blue;
+    color:white;
+}
