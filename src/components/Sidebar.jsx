@@ -74,6 +74,6 @@ const Sidebar = ({ todoItem, handleUpdateTodo, setShowSidebar }) => {
 Sidebar.propTypes={
   todoItem:PropTypes.object,
   handleUpdateTodo:PropTypes.func,
-  setShowSidebar:PropTypes.object
+  setShowSidebar:PropTypes.func
 }
 export default Sidebar;
