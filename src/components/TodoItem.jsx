@@ -1,4 +1,4 @@
-import React, { useRef,useEffect } from "react";
+import PropTypes from "prop-types"
 
 export default function TodoItem({
   id,
@@ -8,16 +8,6 @@ export default function TodoItem({
   handleOnChangeCheckBox,
   handleTodoItemClick
 }) {
-  // const isChecked = useRef(isCompleted);
-  const handleClick = () => {
-    // alert(name);
-    console.log(name);
-  };
-  // useEffect(() => {
-  //   isChecked.current.value=isCompleted
-  
-    
-  // }, [isCompleted])
   
   return (
     <div className="todo-item" onClick={()=>handleTodoItemClick(id)}>
@@ -34,4 +24,12 @@ export default function TodoItem({
       {isImportance && <p>Importance Window . 🐱‍🚀 ⭐🌟✨</p>}
     </div>
   );
+}
+TodoItem.propTypes={
+  id:PropTypes.string,
+  name:PropTypes.string,
+  isImportance:PropTypes.bool,
+  isCompleted:PropTypes.bool,
+  handleOnChangeCheckBox:PropTypes.func,
+  handleTodoItemClick:PropTypes.func
 }

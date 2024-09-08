@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+import  { useState } from "react";
+import PropTypes from "prop-types";
+
 import "./Sidebar.css";
 const Sidebar = ({ todoItem, handleUpdateTodo, setShowSidebar }) => {
   const [name, setName] = useState(todoItem.name);
@@ -54,5 +56,9 @@ const Sidebar = ({ todoItem, handleUpdateTodo, setShowSidebar }) => {
     </div>
   );
 };
-
+Sidebar.propTypes={
+  todoItem:PropTypes.object,
+  handleUpdateTodo:PropTypes.func,
+  setShowSidebar:PropTypes.object
+}
 export default Sidebar;

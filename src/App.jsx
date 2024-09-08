@@ -1,16 +1,19 @@
 import TodoItem from "./components/TodoItem";
 import "./App.css";
-import { useState, useRef } from "react";
+import { useState, useRef,useMemo } from "react";
 import Sidebar from "./components/Sidebar";
+import FilterPanel from "./components/FilterPanel";
 function App() {
+  const [searchText,setSearchText]=useState("");
+  const [selectedFilterId, setSelectedFilterId] = useState("all");
   const [activeTodoItemId, setActiveTodoItemId] = useState()
   const [showSidebar, setShowSidebar] = useState(false)
   const inputTodo = useRef("");
   const [todoList, setTodoList] = useState([
-    { id: 1, name: "Học toán", isImportance: false, isCompleted: false },
-    { id: 2, name: "học vẽ", isImportance: true, isCompleted: false },
-    { id: 3, name: "chơi game", isImportance: false, isCompleted: true },
-    { id: 4, name: "chơi đàn", isImportance: false, isCompleted: false },
+    { id: "1", name: "Học toán", isImportance: false, isCompleted: false ,isDeleted:true},
+    { id: "2", name: "học vẽ", isImportance: true, isCompleted: false ,isDeleted:true},
+    { id: "3", name: "chơi game", isImportance: false, isCompleted: true,isDeleted:false },
+    { id: "4", name: "chơi đàn", isImportance: false, isCompleted: false ,isDeleted:true},
   ]);
   const activedTodoItem=todoList.find((todo)=>todo.id===activeTodoItemId)
   console.log({activeTodoItemId})
@@ -66,7 +69,50 @@ function App() {
      return todo.id===newTodoUpdate.id?newTodoUpdate:todo
     }))
   }
-  const todos = todoList.map((todo, index) => {
+  const filteredTodos =useMemo(()=>todoList.filter(todo=>{
+    if (!todo.name.includes(searchText)) return false;
+    switch (selectedFilterId) {
+      case "importance":
+          return todo.isImportance;
+      case "completed":
+          return todo.isCompleted; 
+      case "deleted":
+        return todo.isDeleted;
+      default:
+        return true;
+    }
+  }),[selectedFilterId,todoList,searchText]) 
+  
+
+  
+  
+  const handleAddNewTask = (e) => {
+    if (e.key === "Enter") {
+      const value = e.target.value;
+      // todoList.push({id:crypto.randomUUID(),name:value})
+      const newTodo = { id: crypto.randomUUID(), name: value , isCompleted:false,isImportance:false,isDeleted:false};
+      setTodoList([...todoList, newTodo]);
+      // console.log("enter ok:",todoList,inputTodo)
+      console.log("inputTodo=", inputTodo.current.value);
+      inputTodo.current.value = "";
+    }
+  };
+  return (
+    <>
+      <div className="container">
+        <FilterPanel selectedFilterId={selectedFilterId}  setSelectedFilterId={setSelectedFilterId} todoList={todoList}
+        searchText={searchText} setSearchText={setSearchText}
+        />
+      <div className="main-container">
+        <input
+          ref={inputTodo}
+          type="text"
+          name="add-new-task"
+          placeholder="thêm todo"
+          className="task-input"
+          onKeyDown={handleAddNewTask}
+        />
+        <div>{filteredTodos.map((todo) => {
     return (
       <TodoItem
         key={todo.id}
@@ -78,37 +124,11 @@ function App() {
         handleTodoItemClick={handleTodoItemClick}
       />
     );
-  });
-
-  
-  
-  const handleAddNewTask = (e) => {
-    if (e.key === "Enter") {
-      const value = e.target.value;
-      // todoList.push({id:crypto.randomUUID(),name:value})
-      const newTodo = { id: crypto.randomUUID(), name: value , isCompleted:false,isImportance:false};
-      setTodoList([...todoList, newTodo]);
-      // console.log("enter ok:",todoList,inputTodo)
-      console.log("inputTodo=", inputTodo.current.value);
-      inputTodo.current.value = "";
-    }
-  };
-  return (
-    <>
-      <h1>Todo App with React Js</h1>
-      <div className="container">
-        <input
-          ref={inputTodo}
-          type="text"
-          name="add-new-task"
-          placeholder="thêm todo"
-          className="task-input"
-          onKeyDown={handleAddNewTask}
-        />
-        <div>{todos}</div>
+  })}</div>
         
          {showSidebar && <Sidebar key={activeTodoItemId} todoItem={activedTodoItem} handleUpdateTodo={handleUpdateTotoItem} setShowSidebar={setShowSidebar}/>}
         
+      </div>
       </div>
     </>
   );
